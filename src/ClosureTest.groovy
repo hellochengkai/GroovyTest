@@ -11,6 +11,14 @@ class ClosureTest {
      *
      * 1. 闭包可以访问外部变量，而方法（函数）则不能。
      * 在定义闭包以后引用的外部变量会在闭包中保存一份
+     *
+     *一个闭包的普通参数定义必须遵循如下一些原则：
+
+     参数类型可选
+     参数名字
+     可选的参数默认值
+     参数必须用逗号分隔
+     *
      */
 
     static def eachLine(lines, closure) {
@@ -58,7 +66,31 @@ class ClosureTest {
         eachLine('a'..'h',closure4)
         //闭包可以作为参数传入，闭包作为方法的唯一参数或最后一个参数时可省略括号。
         //可省略括号，与上面等价
+        //可以看见，当闭包作为闭包或方法的最后一个参数时我们可以将闭包从参数圆括号中提取出来接在最后，
+        // 如果闭包是唯一的一个参数，则闭包或方法参数所在的圆括号也可以省略；对于有多个闭包参数的，
+        // 只要是在参数声明最后的，均可以按上述方式省略。
         eachLine('a'..'g') { printf it }
         eachA_Z {println it}
+
+
+        def closureWithOneArg = { str1 -> str1.toUpperCase() }
+        assert closureWithOneArg('groovy') == 'GROOVY'
+
+        def closureWithOneArgAndExplicitType = { String str1 -> str1.toUpperCase() }
+        assert closureWithOneArgAndExplicitType('groovy') == 'GROOVY'
+
+        def closureWithTwoArgs = { a,b -> a+b }
+        assert closureWithTwoArgs(1,2) == 3
+
+        def closureWithTwoArgsAndExplicitTypes = { int a, int b -> a+b }
+        assert closureWithTwoArgsAndExplicitTypes(1,2) == 3
+
+        def closureWithTwoArgsAndOptionalTypes = { a, int b -> a+b }
+        assert closureWithTwoArgsAndOptionalTypes(1,2) == 3
+
+        //可选的参数默认值
+        def closureWithTwoArgAndDefaultValue = { int a, int b=2 -> a+b }
+        assert closureWithTwoArgAndDefaultValue(1) == 3
+        assert closureWithTwoArgAndDefaultValue(1,1) == 3
     }
 }
